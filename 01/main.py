@@ -1,8 +1,6 @@
 # https://adventofcode.com/2022/day/1
 from rich import print
 from dataclasses import dataclass, field
-import requests
-
 @dataclass
 class Elve:
     id: int
