@@ -10,7 +10,9 @@ def main():
         games.pop() # remove empty line at the end
     
 
-    scoregame(games[0])
+    print("What would your total score be if everything goes exactly according to your strategy guide?")
+    print(sum([scoregame(game) for game in games]))
+
 
 def scoregame(game : str) -> int:
     shapeMapping = {
@@ -28,7 +30,6 @@ def scoregame(game : str) -> int:
         "scissors": 3
     }
     opponent, me = [shapeMapping[x] for x in game.split(" ")]
-    print(opponent, me, playgame(opponent, me))
 
     mypoints = pointMapping[me]
     gameresult = playgame(opponent, me)
@@ -36,10 +37,10 @@ def scoregame(game : str) -> int:
         mypoints += 6
     if gameresult == "draw":
         mypoints += 3
-    
+    # print(opponent, me, playgame(opponent, me), mypoints)
     return mypoints
 
-def playgame(left : Literal["rock","paper","scissors"], right) -> Literal["left", "right", "draw","error"]:
+def playgame(left : Literal["rock","paper","scissors"], right) -> Literal["left", "right", "draw"]:
     if (left == "rock" and right == "scissors"):
         return "left"
     if (left == "rock" and right == "paper"):
@@ -57,8 +58,7 @@ def playgame(left : Literal["rock","paper","scissors"], right) -> Literal["left"
 
     if (left ==  right):
         return "draw"
-    
-    return "error"
+    raise NameError("komischer SpielFall")
 
 
 if __name__ == "__main__":
