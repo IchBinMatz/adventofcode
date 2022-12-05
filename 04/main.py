@@ -34,7 +34,7 @@ def hasOverlap(p:Pair) -> bool:
     return False
 
 def main():
-    with open("04/input.txt", "r") as f:
+    with open("input.txt", "r") as f:
         pairs = [
             Pair(line)
             for line in f.read().splitlines()

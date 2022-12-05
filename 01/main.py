@@ -13,7 +13,7 @@ class Elve:
 def main():
     # read in file
     data = []
-    with open("01/input.txt", 'r') as f:
+    with open("input.txt", 'r') as f:
         data = f.read()
     
     elvesstrings = [s.split('\n') for s in data.split("\n\n")]

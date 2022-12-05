@@ -5,7 +5,7 @@ pointMapping = {"rock": 1, "paper": 2, "scissors": 3}
 
 
 def main():
-    with open("02/input.txt", "r") as f:
+    with open("input.txt", "r") as f:
         games = f.read().split("\n")
         games.pop()  # remove empty line at the end
 
