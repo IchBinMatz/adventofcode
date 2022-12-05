@@ -4,42 +4,49 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Pair:
-    left: str
-    right: str
-    lsections: list[int] = field(init=False)
-    rsections: list[int] = field(init=False)
-    hasFullyContaining: bool = field(init=False)
+    input: str
+    lstart : int = field(init=False)
+    lend: int = field(init=False)
+    rstart :int = field(init=False)
+    rend: int = field(init=False)
 
     def __post_init__(self):
-        start, end = [int(s) for s in self.left.split("-")]
-        self.lsections = list(range(start, end + 1))
-        start, end = [int(s) for s in self.right.split("-")]
-        self.rsections = list(range(start, end + 1))
-        self.hasFullyContaining = set(self.rsections).issubset(self.lsections) or set(
-            self.rsections
-        ).issubset(self.lsections)
+        left, right = self.input.split(",")
+        self.lstart, self.lend = [int(n) for n in left.split("-")]
+        self.rstart, self.rend = [int(n) for n in right.split("-")]
 
+def hasFullyContaining(p: Pair) -> bool:
+    if (p.lstart >= p.rstart) and (p.lend <= p.rend):
+        return True
+    if (p.rstart >= p.lstart) and (p.rend <= p.lend):
+        return True
+    return False
+
+def hasOverlap(p:Pair) -> bool:
+    if (p.lstart >= p.rstart) and (p.lstart <= p.rend):
+        return True
+    if (p.lend >= p.rstart) and (p.lend <= p.rend):
+        return True
+    if (p.rstart >= p.lstart) and (p.rstart <= p.lend):
+        return True
+    if (p.rend >= p.lstart) and (p.rend <= p.lend):
+        return True
+    return False
 
 def main():
     with open("04/input.txt", "r") as f:
         pairs = [
-            Pair(line.split(",")[0], line.split(",")[1])
+            Pair(line)
             for line in f.read().splitlines()
         ]
-
-    hasFullyContaining: list[Pair] = []
-    for pair in pairs:
-        if set(pair.rsections).issubset(pair.lsections):
-            hasFullyContaining.append(pair)
-            continue  # so wird im fall, wenn beide gleich sind das object nicht zweimal hinzugefügt
-        if set(pair.rsections).issubset(pair.lsections):
-            hasFullyContaining.append(pair)
-
-    hasFullyContaining = list(filter(lambda pair: pair.hasFullyContaining, pairs))
-    print(hasFullyContaining[:3])
+    print(pairs[:3])
+    uselessPairs = list(filter(hasFullyContaining, pairs))
     print("In how many assignment pairs does one range fully contain the other?")
-    print(len(hasFullyContaining))
+    print(len(uselessPairs))
 
+    print("In how many assignment pairs do the ranges overlap?")
+    overlappingPairs = list(filter(hasOverlap, pairs))
+    print(len(overlappingPairs))
 
 if __name__ == "__main__":
     main()
