@@ -53,37 +53,31 @@ def parse_lines(text: str) -> MyDir:
     current_dir: MyDir = root_dir
     dir_history: list[MyDir] = [root_dir]
     for line in lines:
-        if line.startswith("$"):
-            # os.system('clear')
-            # print(dir_history[-1].name, current_dir.name)
-            # print(root_dir.print())
-            # time.sleep(0.1)
-            _, cmd, *arg = line.split(" ")
-            if cmd == "cd":
-                if arg[0] == "..":
-                    current_dir = dir_history.pop()
-                    continue
-                if arg[0] == "/":
-                    dir_history = [root_dir]
-                    current_dir = root_dir
-                    continue
+        
+        match line.split(" "):
+            case "$", "cd", "..":
+                current_dir = dir_history.pop()
+                continue
+            case "$", "cd", "/":
+                dir_history = [root_dir]
+                current_dir = root_dir
+                continue
+            case "$", "cd", dirname:
                 dir_history.append(current_dir)
-                if arg[0] in [d.name for d in current_dir.children]:
+                if dirname in [d.name for d in current_dir.children]:
                     current_dir = next(
-                        filter(lambda d: d.name == arg[0], current_dir.children)
-                    )
+                            filter(lambda d: d.name == dirname, current_dir.children)
+                        )
                 else:
-                    current_dir = MyDir(name=arg[0])
+                    current_dir = MyDir(name=dirname)
                 continue
-            if cmd == "ls":
+            case "$", "ls":
                 continue
-        size, name = line.split(" ")
-        if name in [d.name for d in current_dir.children]:
-            continue
-        if size == "dir":
-            current_dir.children.append(MyDir(name=name))
-            continue
-        current_dir.children.append(MyFile(name, int(size)))
+            case "dir", name:
+                current_dir.children.append(MyDir(name=name))
+                continue
+            case size, name: 
+                current_dir.children.append(MyFile(name, int(size)))
     return root_dir
 
 def step1(dirs: list[MyDir]) -> int:
